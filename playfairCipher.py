@@ -1,23 +1,35 @@
 import numpy as np
+
 digrafos = []  # Lista 2D, onde estarão os dígrafos
 total = 0  # Variável acumuladora 
 abc = ['A','B','C','D','E','F','G','H','I','K','L','M','N','O','P','Q','R','S','T','U','V','W','X','Y','Z']
 
 # ------------------------------- Tabela Chave ------------------------------- #
 
-def preparaString(string):
-    string = string.replace(' ','')
-    string = string.upper()
-    string = list(string)
-    if 'J' in string:
-        indice = string.index('J')
-        string[indice] = 'I'
-    
-    return string
+# Função que irá verificar validade do input:
+def inputString(mensagem):
+    while True: 
+        acum = 0 # Variável acumuladora
 
+        string = str(input(mensagem))
+        string = string.replace(' ','')
+        string = string.upper()
+        listString = list(string)
+        if 'J' in listString:
+            indice = listString.index('J')
+            listString[indice] = 'I'
+        
+        for letra in listString:
+            if letra in abc:
+                acum += 1
 
-palavraChave = str(input('Digite a palavra-chave: '))
-palavraChave = preparaString(palavraChave)
+        if acum == len(listString):
+            return listString
+        
+        print('Input inválido')
+
+palavraChave = inputString('Digite a palavra-chave: ')
+
 c = palavraChave + abc  # Concatenação de listas
 c = list(dict.fromkeys(c))  # Removendo valores que repetem definindo chaves de um dicionário, chaves sempre serão únicas
 
@@ -30,6 +42,7 @@ tabelaChave = np.array([row1,
                         row5])
                         
 print(f'\n{tabelaChave}\n')
+
 # ----------------------------------- Menu ----------------------------------- #
 
 while True:
@@ -155,17 +168,14 @@ def fazListaDigrafos(lista):
     return digrafos
 
 def cifrar():
-    txtPleno = str(input('Digite a palavra a ser cifrada: '))
-    lista = preparaString(txtPleno)
-
+    lista = inputString('Digite a palavra a ser cifrada: ')
     percorreListaDigrafos(fazListaDigrafos(lista))
 
 
 # --------------------------------- Decifragem --------------------------------- #
 
 def decifrar():
-    decif = str(input('Digite a palavra a ser decifrada: '))
-    decif = preparaString(decif)
+    decif = inputString('Digite a palavra a ser decifrada: ')
     # Fazer lista de digrafos:
     for i in range(0,len(decif),2):
         digrafos.append([decif[i],decif[i+1]]) 
@@ -178,9 +188,10 @@ if modo == '1':
 else:
     decifrar()
 
+# Transformar lista em string:
 txt = np.concatenate((digrafos))
 txt = ''.join(txt)
 resposta = np.concatenate((resultado))
 resposta = ''.join(resposta)
 
-print(f'{txt} --> {resposta}')
+print(f'Texto: {txt} --> Resultado: {resposta}')
